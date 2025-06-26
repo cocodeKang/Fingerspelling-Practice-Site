@@ -1,0 +1,102 @@
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>지문자 읽기 연습</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f8f8f8;
+      text-align: center;
+    }
+    #videoContainer {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 10px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    video {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #answer {
+      display: none;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoContainer">
+    <video id="mainVideo" autoplay loop muted></video>
+    <p id="answer"></p>
+  </div>
+  <div>
+    <button id="answerBtn">정답보기</button>
+    <button id="nextBtn">다음</button>
+  </div>
+
+  <script>
+    const videoFiles = [
+      "KBS드라마 겨울연가.mp4",
+      "배용준.mp4",
+      "MBC드라마 대장금.mp4",
+      "스타트업 해빗팩토리.mp4",
+      "반도체.mp4",
+      "김대중 대통령.mp4",
+      "개성공단.mp4",
+      "김정일.mp4",
+      "경의선-동해선.mp4",
+      "문화역사_금강산.mp4",
+      "시행령 4조-7조.mp4"
+    ];
+
+    // 페이지 로드 시 무작위 순서로 섞기
+    let order = videoFiles.slice();
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+
+    let currentIndex = 0;
+    const videoEl = document.getElementById("mainVideo");
+    const answerEl = document.getElementById("answer");
+    const answerBtn = document.getElementById("answerBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function loadVideo(idx) {
+      const file = order[idx];
+      videoEl.src = encodeURI(`videos/${file}`);
+      answerEl.textContent = "정답: " + file.replace(/\.mp4$/i, "");
+      answerEl.style.display = "none";
+    }
+
+    answerBtn.onclick = () => {
+      answerEl.style.display = answerEl.style.display === "block" ? "none" : "block";
+    };
+
+    nextBtn.onclick = () => {
+      currentIndex = (currentIndex + 1) % order.length;
+      loadVideo(currentIndex);
+    };
+
+    // 초기 로드
+    loadVideo(currentIndex);
+  </script>
+</body>
+</html>
+```
