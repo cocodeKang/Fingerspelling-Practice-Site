@@ -27,7 +27,7 @@
     }
     button {
       padding: 8px 16px;
-      margin: 0 5px;
+      margin: 5px;
       font-size: 14px;
       cursor: pointer;
     }
@@ -37,11 +37,25 @@
       font-weight: bold;
       color: #333;
     }
+    #speedControls {
+      margin-top: 10px;
+    }
+    #speedControls button {
+      padding: 4px 12px;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
   <div id="videoContainer">
     <video id="mainVideo" autoplay loop muted></video>
+    <div id="speedControls">
+      <strong>재생 속도:</strong>
+      <button data-speed="0.25">×0.25</button>
+      <button data-speed="0.5">×0.5</button>
+      <button data-speed="0.75">×0.75</button>
+      <button data-speed="1.0">×1.0</button>
+    </div>
     <p id="answer"></p>
   </div>
   <div>
@@ -64,7 +78,6 @@
       "시행령 4조-7조.mp4"
     ];
 
-    // 페이지 로드 시 무작위 순서로 섞기
     let order = videoFiles.slice();
     for (let i = order.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -80,6 +93,7 @@
     function loadVideo(idx) {
       const file = order[idx];
       videoEl.src = encodeURI(`videos/${file}`);
+      videoEl.playbackRate = 1.0; // 초기 재생속도
       answerEl.textContent = "정답: " + file.replace(/\.mp4$/i, "");
       answerEl.style.display = "none";
     }
@@ -92,6 +106,14 @@
       currentIndex = (currentIndex + 1) % order.length;
       loadVideo(currentIndex);
     };
+
+    // 속도 조절 이벤트 연결
+    document.querySelectorAll('#speedControls button').forEach(btn => {
+      btn.onclick = () => {
+        const speed = parseFloat(btn.dataset.speed);
+        videoEl.playbackRate = speed;
+      };
+    });
 
     // 초기 로드
     loadVideo(currentIndex);
